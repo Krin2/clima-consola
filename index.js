@@ -21,9 +21,13 @@ const main = async () => {
 
                 // Generar un listado usando inquirer para seleccionar uno de los lugares encontrados
                 const idSeleccionado = await listarLugares(lugares);
+                if (idSeleccionado === '0') continue; // Elimina el error debido a que la seleccion fue 0
+
 
                 // Usamos el id para buscar el luar en el listado
                 const lugarSeleccionado = lugares.find(l => l.id === idSeleccionado);
+                // guardo en DB
+                busqueda.agregarHistorial(lugarSeleccionado.nombre);
 
                 // consulto la API de openWeather para obtener el clima segun las coordenadas del lugar
                 const clima = await busqueda.climaLugar(lugarSeleccionado.lat, lugarSeleccionado.lng);
@@ -40,6 +44,10 @@ const main = async () => {
                 
             case 2:
                 // mostrar ciudades
+                busqueda.historialCapitalizado.forEach( (lugar, i) => {
+                    const idx = `${ i+1 }`.green;
+                    console.log(`${idx} ${lugar}`)
+                })
                 break;
                 
             case 0:
